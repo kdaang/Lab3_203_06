@@ -22,16 +22,18 @@ public class MySensorEventListener implements SensorEventListener{
     String direction = "NONE";
     boolean peaked =false;
     Timer timer = new Timer();
+    GameBlock gameBlock;
 
     //Threshold constant
     final float HOLD = alpha*50;
 
     //Constructor for MySensorEventListener: Takes a  current data TextView, a Vector, two LineGraphViews, and and a direction label text view.
     //Assigns the parameters to their respective class-wide fields
-    public MySensorEventListener(TextView outputView, Vector data, TextView dirLbl) {
+    public MySensorEventListener(TextView outputView, Vector data, TextView dirLbl, GameBlock gameBlock) {
         output = outputView;
         accelData = data;
         this.dirLbl=dirLbl;
+        this.gameBlock= gameBlock;
     }
 
     public void onAccuracyChanged(Sensor s, int i) {
@@ -55,6 +57,7 @@ public class MySensorEventListener implements SensorEventListener{
 
             if(getAgitated()&&!peaked){
                 direction=getGesture();
+                gameBlock.move(direction);
             }
             dirLbl.setText(direction);
             String s = String.format("(%.2f, %.2f, %.2f)", se.values[0],se.values[1], se.values[2]);
