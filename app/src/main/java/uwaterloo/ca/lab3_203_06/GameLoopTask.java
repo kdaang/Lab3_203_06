@@ -10,49 +10,65 @@ public class GameLoopTask extends TimerTask {
     GameBlock gb;
     float BLOCKX,BLOCKY;
     ImageView gameBoard;
+    public final float ORIGIN_X = -38, ORIGIN_Y = 117;
     public GameLoopTask(String dir, GameBlock gb, ImageView gameBoard, float blockx, float blocky){
         direction=dir;
         this.gb=gb;
         BLOCKX=blockx;
         BLOCKY=blocky;
         this.gameBoard=gameBoard;
-
+        BLOCKX = gb.getX();
+        BLOCKY = gb.getY();
+        Log.d("GAMEBOARD", String.format("BLOCK.XY, %f, %f", BLOCKX, BLOCKY));
     }
     @Override
     public void run(){
+        int xy[] = new int[2];
+        gameBoard.getLocationOnScreen(xy);
+        Log.d("GAMEBOARD", String.format("GBOARD.X, %d", xy[0]));
+        Log.d("GAMEBOARD", String.format("GBOARD.Y, %d", xy[1]));
+        Log.d("GB", String.format("GB.SCALE, %f", gameBoard.getScaleY()));
         switch (direction){
             case "RIGHT":
-                if(gb.getX()+gb.getVelocity()>=BLOCKX+25+gameBoard.getWidth()*0.75f){
+                Log.d("X", String.format("GB.X, %f, %f", gb.getX(),gb.getY()));
+                if(gb.getX()+gb.getVelocity()>= ORIGIN_X + (gb.getWidth()*0.65f*3f)){
+                    gb.setX(ORIGIN_X + (gb.getWidth()*0.65f*3f));
+                    Log.d("X", String.format("GB.X, %f, %f", gb.getX(),gb.getY()));
                     this.cancel();
-                    gb.setX(BLOCKX+25+gameBoard.getWidth()*0.75f);
                 } else {
                     gb.setX(gb.getX() + gb.getVelocity());
                     gb.setVelocity(gb.getVelocity()+10);
-                    Log.d("Check", "X: "+gb.getX());
+                    //Log.d("Check", "X: "+gb.getX());
                 }
                 break;
             case "LEFT":
-                if(gb.getX()+gb.getVelocity()<=BLOCKX+25){
+                Log.d("X", String.format("GB.X, %f, %f", gb.getX(),gb.getY()));
+                if(gb.getX()+gb.getVelocity()<= ORIGIN_X){
+                    gb.setX(ORIGIN_X);
+                    Log.d("X", String.format("GB.X, %f, %f", gb.getX(),gb.getY()));
                     this.cancel();
-                    gb.setX(BLOCKX+25);
                 } else {
                     gb.setX(gb.getX() + gb.getVelocity());
                     gb.setVelocity(gb.getVelocity()-10);
                 }
                 break;
             case "UP":
-                if(gb.getY()+gb.getVelocity()<=BLOCKY + 25){
+                Log.d("X", String.format("GB.X, %f, %f", gb.getX(),gb.getY()));
+                if(gb.getY()+gb.getVelocity()<=ORIGIN_Y){
+                    gb.setY(ORIGIN_Y);
+                    Log.d("X", String.format("GB.X, %f, %f", gb.getX(),gb.getY()));
                     this.cancel();
-                    gb.setY(BLOCKY+25);
                 } else {
                     gb.setY(gb.getY() + gb.getVelocity());
                     gb.setVelocity(gb.getVelocity()-10);
                 }
                 break;
             case "DOWN":
-                if(gb.getY()+gb.getVelocity()>=BLOCKY + (gameBoard.getHeight()-9)*0.53f){
+                Log.d("X", String.format("GB.X, %f, %f", gb.getX(),gb.getY()));
+                if(gb.getY()+gb.getVelocity()>=ORIGIN_Y+(gb.getHeight()*0.65f*3f)){
+                    gb.setY(ORIGIN_Y+(gb.getHeight()*0.65f*3f));
+                    Log.d("X", String.format("GB.X, %f, %f", gb.getX(),gb.getY()));
                     this.cancel();
-                    gb.setY(BLOCKY + (gameBoard.getHeight()-9)*0.53f);
                 } else {
                     gb.setY(gb.getY() + gb.getVelocity());
                     gb.setVelocity(gb.getVelocity()+10);

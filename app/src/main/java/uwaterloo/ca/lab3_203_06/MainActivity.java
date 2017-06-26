@@ -1,4 +1,5 @@
 package uwaterloo.ca.lab3_203_06;
+import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
@@ -17,7 +18,7 @@ public class MainActivity extends AppCompatActivity {
     //Declaring class-wide fields
     SensorEventListener accel;
     Vector<float[]> accelData = new Vector<>();
-    public final float BOARDX = 0, BOARDY = -200, BLOCKX = -42, BLOCKY = 0;
+    public final float BOARDX = 0, BOARDY = -200, BLOCKX = 0, BLOCKY = 0;
     ImageView gameBoard;
     Timer time = new Timer();
 
@@ -31,26 +32,24 @@ public class MainActivity extends AppCompatActivity {
         RelativeLayout rl = (RelativeLayout) findViewById(R.id.activity_lab3_203_06);
 
         //Initializes a blank label to display the direction of the gesture
-        TextView dirLbl = makeLabel(rl, "Left", 0, 1200);
+        TextView dirLbl = makeLabel(rl, "Left", 700, 1200);
         dirLbl.setTextSize(32);
+        dirLbl.setTextColor(Color.RED);
+        TextView l = makeLabel(rl, "Left", 0, 1200);
+        l.setTextSize(32);
         TextView r = makeLabel(rl, "Right", 0, 1400);
         r.setTextSize(32);
-        TextView u = makeLabel(rl, "Up", 200, 1200);
+        TextView u = makeLabel(rl, "Up", 500, 1200);
         u.setTextSize(32);
-        TextView d = makeLabel(rl, "Down", 200, 1400);
+        TextView d = makeLabel(rl, "Down", 500, 1400);
         d.setTextSize(32);
-
-
-        //ACCEL
 
         //Creates a label that indicates the current accelerometer reading
         gameBoard = makeLabel(rl, R.drawable.gameboard, BOARDX, BOARDY);
+        final GameBlock gameBlock = new GameBlock(rl, R.drawable.gameblock, BLOCKX, BLOCKY,
+                getApplicationContext(), time, gameBoard);
 
-        final GameBlock gameBlock = new GameBlock(rl, R.drawable.gameblock, BLOCKX, BLOCKY, getApplicationContext(), time, gameBoard);
-        gameBlock.setScaleX(.75f);
-        gameBlock.setScaleY(.75f);
-
-        dirLbl.setOnClickListener(new View.OnClickListener() {
+        l.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 gameBlock.move("LEFT");

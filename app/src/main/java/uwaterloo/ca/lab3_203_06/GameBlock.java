@@ -9,14 +9,17 @@ import java.util.Timer;
 
 public class GameBlock extends AppCompatImageView {
     float velocity = 0, blockx, blocky;
+    public final float OFFSET_X = -68, OFFSET_Y = 87;
     Timer time;
     ImageView gameBoard;
 
     public GameBlock(RelativeLayout rl, int img, float x, float y, Context ctx, Timer time,  ImageView gameBoard) {
         super(ctx);
         setImageResource(img);
-        setX(x);
-        setY(y);
+        setX(OFFSET_X);
+        setY(OFFSET_Y);
+        setScaleX(.65f);
+        setScaleY(.65f);
         rl.addView(this);
         this.time = time;
         this.blockx=x;

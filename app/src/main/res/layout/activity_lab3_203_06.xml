@@ -17,6 +17,5 @@
         android:paddingTop="10dp"
         android:minHeight="500dp"
         tools:context="lab1_203_06.uwaterloo.ca.lab3_203_06">
-
     </RelativeLayout>
 </ScrollView>
