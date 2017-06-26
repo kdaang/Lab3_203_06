@@ -10,6 +10,7 @@ import java.util.Timer;
 public class GameBlock extends AppCompatImageView {
     float velocity = 0, blockx, blocky;
     public final float OFFSET_X = -68, OFFSET_Y = 87;
+    public final float SCALE = .65f;
     Timer time;
     ImageView gameBoard;
 
@@ -18,8 +19,8 @@ public class GameBlock extends AppCompatImageView {
         setImageResource(img);
         setX(OFFSET_X);
         setY(OFFSET_Y);
-        setScaleX(.65f);
-        setScaleY(.65f);
+        setScaleX(SCALE);
+        setScaleY(SCALE);
         rl.addView(this);
         this.time = time;
         this.blockx=x;
@@ -29,7 +30,7 @@ public class GameBlock extends AppCompatImageView {
 
     public void move(String dir) {
         velocity = 0;
-        time.schedule(new GameLoopTask(dir, this, gameBoard, blockx,blocky), 25, 25);
+        time.schedule(new GameLoopTask(dir, this, gameBoard, blockx,blocky, SCALE), 25, 25);
     }
 
     public float getVelocity() {

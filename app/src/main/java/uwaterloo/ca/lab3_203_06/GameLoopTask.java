@@ -8,10 +8,10 @@ import java.util.TimerTask;
 public class GameLoopTask extends TimerTask {
     String direction;
     GameBlock gb;
-    float BLOCKX,BLOCKY;
+    float BLOCKX,BLOCKY, SCALE;
     ImageView gameBoard;
     public final float ORIGIN_X = -38, ORIGIN_Y = 117;
-    public GameLoopTask(String dir, GameBlock gb, ImageView gameBoard, float blockx, float blocky){
+    public GameLoopTask(String dir, GameBlock gb, ImageView gameBoard, float blockx, float blocky, float SCALE){
         direction=dir;
         this.gb=gb;
         BLOCKX=blockx;
@@ -19,6 +19,7 @@ public class GameLoopTask extends TimerTask {
         this.gameBoard=gameBoard;
         BLOCKX = gb.getX();
         BLOCKY = gb.getY();
+        this.SCALE = SCALE;
         Log.d("GAMEBOARD", String.format("BLOCK.XY, %f, %f", BLOCKX, BLOCKY));
     }
     @Override
@@ -31,8 +32,8 @@ public class GameLoopTask extends TimerTask {
         switch (direction){
             case "RIGHT":
                 Log.d("X", String.format("GB.X, %f, %f", gb.getX(),gb.getY()));
-                if(gb.getX()+gb.getVelocity()>= ORIGIN_X + (gb.getWidth()*0.65f*3f)){
-                    gb.setX(ORIGIN_X + (gb.getWidth()*0.65f*3f));
+                if(gb.getX()+gb.getVelocity()>= ORIGIN_X + (gb.getWidth()*SCALE*3f)){
+                    gb.setX(ORIGIN_X + (gb.getWidth()*SCALE*3f));
                     Log.d("X", String.format("GB.X, %f, %f", gb.getX(),gb.getY()));
                     this.cancel();
                 } else {
@@ -65,8 +66,8 @@ public class GameLoopTask extends TimerTask {
                 break;
             case "DOWN":
                 Log.d("X", String.format("GB.X, %f, %f", gb.getX(),gb.getY()));
-                if(gb.getY()+gb.getVelocity()>=ORIGIN_Y+(gb.getHeight()*0.65f*3f)){
-                    gb.setY(ORIGIN_Y+(gb.getHeight()*0.65f*3f));
+                if(gb.getY()+gb.getVelocity()>=ORIGIN_Y+(gb.getHeight()*SCALE*3f)){
+                    gb.setY(ORIGIN_Y+(gb.getHeight()*SCALE*3f));
                     Log.d("X", String.format("GB.X, %f, %f", gb.getX(),gb.getY()));
                     this.cancel();
                 } else {
