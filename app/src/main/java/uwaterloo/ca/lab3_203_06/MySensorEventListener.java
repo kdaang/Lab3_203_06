@@ -60,8 +60,8 @@ public class MySensorEventListener implements SensorEventListener{
                 gameBlock.move(direction);
             }
             dirLbl.setText(direction);
-            String s = String.format("(%.2f, %.2f, %.2f)", se.values[0],se.values[1], se.values[2]);
-            output.setText(s+"\n");
+            //String s = String.format("(%.2f, %.2f, %.2f)", se.values[0],se.values[1], se.values[2]);
+            //output.setText(s+"\n");
             float[] tmpData = {se.values[0],se.values[1],se.values[2]};
             x.add(se.values[0]);
             y.add(se.values[1]);
@@ -75,7 +75,7 @@ public class MySensorEventListener implements SensorEventListener{
 
     //A method that returns the average of the values in a float vector from a starting index to a certain length after
     private float avg(Vector<Float> axisValues, int start, int length){
-        Log.d("Check", "Check");
+        //Log.d("Check", "Check");
 
         if (start+length>=axisValues.size()){
             Log.e("Error", "OutOfBounds");
