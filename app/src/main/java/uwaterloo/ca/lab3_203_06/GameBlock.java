@@ -28,7 +28,7 @@ public class GameBlock extends AppCompatImageView {
         this.gameBoard=gameBoard;
     }
 
-    public void move(String dir) {
+    public void move(String dir) {//move gameblock with animation
         velocity = 0;
         time.schedule(new GameLoopTask(dir, this, gameBoard, blockx,blocky, SCALE), 25, 25);
     }

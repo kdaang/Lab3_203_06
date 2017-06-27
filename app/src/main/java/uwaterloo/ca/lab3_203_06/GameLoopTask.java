@@ -25,12 +25,8 @@ public class GameLoopTask extends TimerTask {
     @Override
     public void run(){
         int xy[] = new int[2];
-        gameBoard.getLocationOnScreen(xy);
-        Log.d("GAMEBOARD", String.format("GBOARD.X, %d", xy[0]));
-        Log.d("GAMEBOARD", String.format("GBOARD.Y, %d", xy[1]));
-        Log.d("GB", String.format("GB.SCALE, %f", gameBoard.getScaleY()));
         switch (direction){
-            case "RIGHT":
+            case "RIGHT"://move gameblock to the right
                 Log.d("X", String.format("GB.X, %f, %f", gb.getX(),gb.getY()));
                 if(gb.getX()+gb.getVelocity()>= ORIGIN_X + (gb.getWidth()*SCALE*3f)){
                     gb.setX(ORIGIN_X + (gb.getWidth()*SCALE*3f));
@@ -42,7 +38,7 @@ public class GameLoopTask extends TimerTask {
                     //Log.d("Check", "X: "+gb.getX());
                 }
                 break;
-            case "LEFT":
+            case "LEFT"://move gameblock to the left
                 Log.d("X", String.format("GB.X, %f, %f", gb.getX(),gb.getY()));
                 if(gb.getX()+gb.getVelocity()<= ORIGIN_X){
                     gb.setX(ORIGIN_X);
@@ -53,7 +49,7 @@ public class GameLoopTask extends TimerTask {
                     gb.setVelocity(gb.getVelocity()-10);
                 }
                 break;
-            case "UP":
+            case "UP"://move gameblock up
                 Log.d("X", String.format("GB.X, %f, %f", gb.getX(),gb.getY()));
                 if(gb.getY()+gb.getVelocity()<=ORIGIN_Y){
                     gb.setY(ORIGIN_Y);
@@ -64,7 +60,7 @@ public class GameLoopTask extends TimerTask {
                     gb.setVelocity(gb.getVelocity()-10);
                 }
                 break;
-            case "DOWN":
+            case "DOWN"://move gameblock to the down
                 Log.d("X", String.format("GB.X, %f, %f", gb.getX(),gb.getY()));
                 if(gb.getY()+gb.getVelocity()>=ORIGIN_Y+(gb.getHeight()*SCALE*3f)){
                     gb.setY(ORIGIN_Y+(gb.getHeight()*SCALE*3f));
