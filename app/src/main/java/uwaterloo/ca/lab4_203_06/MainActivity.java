@@ -12,7 +12,7 @@ import android.widget.TextView;
 import java.util.Timer;
 import java.util.Vector;
 
-import uwaterloo.ca.lab3_203_06.R;
+
 
 
 public class MainActivity extends AppCompatActivity {
@@ -20,6 +20,7 @@ public class MainActivity extends AppCompatActivity {
     //Declaring class-wide fields
     SensorEventListener accel;
     Vector<float[]> accelData = new Vector<>();
+    Vector<GameBlock>  blocks = new Vector<>();
     public final float BOARDX = 0, BOARDY = -200, BLOCKX = 0, BLOCKY = 0;
     ImageView gameBoard;
     Timer time = new Timer();
@@ -50,30 +51,31 @@ public class MainActivity extends AppCompatActivity {
         //Creates a label that indicates the current accelerometer reading
         gameBoard = makeLabel(rl, R.drawable.gameboard, BOARDX, BOARDY);
         final GameBlock gameBlock = new GameBlock(rl, R.drawable.gameblock, BLOCKX, BLOCKY,
-                getApplicationContext(), time, gameBoard);
+                getApplicationContext(), time, gameBoard, this, blocks);
+        blocks.add(gameBlock);
 
         l.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                gameBlock.move("LEFT");
+                moveAll("LEFT");
             }
         });
         r.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                gameBlock.move("RIGHT");
+                moveAll("RIGHT");
             }
         });
         u.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                gameBlock.move("UP");
+                moveAll("UP");
             }
         });
         d.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                gameBlock.move("DOWN");
+                moveAll("DOWN");
             }
         });
 
@@ -86,6 +88,8 @@ public class MainActivity extends AppCompatActivity {
         sensorManager.registerListener(accel, accelSensor, SensorManager.SENSOR_DELAY_GAME);
 
     }
+
+
 
     //A method that creates a label with specific text and adds it to a specified layout
     private TextView makeLabel(RelativeLayout rl, String text, float x, float y) {
@@ -104,6 +108,11 @@ public class MainActivity extends AppCompatActivity {
         iv.setX(x);
         rl.addView(iv);
         return iv;
+    }
+    private void moveAll(String dir){
+        for (GameBlock e : blocks){
+            e.move(dir);
+        }
     }
 
 

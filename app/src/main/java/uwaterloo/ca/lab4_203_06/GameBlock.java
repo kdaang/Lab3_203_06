@@ -1,11 +1,13 @@
 package uwaterloo.ca.lab4_203_06;
 
+import android.app.Activity;
 import android.content.Context;
 import android.support.v7.widget.AppCompatImageView;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import java.util.Timer;
+import java.util.Vector;
 
 public class GameBlock extends AppCompatImageView {
     float velocity = 0, blockx, blocky;
@@ -16,12 +18,14 @@ public class GameBlock extends AppCompatImageView {
     RelativeLayout rl;
     int srcImg;
     Context ctx;
+    Activity act;
+    Vector<GameBlock> blocks;
 
-    public GameBlock(RelativeLayout rl, int img, float x, float y, Context ctx, Timer time,  ImageView gameBoard) {
+    public GameBlock(RelativeLayout rl, int img, float x, float y, Context ctx, Timer time, ImageView gameBoard, Activity act, Vector<GameBlock> blocks) {
         super(ctx);
         setImageResource(img);
-        setX(OFFSET_X);
-        setY(OFFSET_Y);
+        setX(OFFSET_X+x);
+        setY(OFFSET_Y+y);
         setScaleX(SCALE);
         setScaleY(SCALE);
         rl.addView(this);
@@ -32,12 +36,15 @@ public class GameBlock extends AppCompatImageView {
         this.blockx=x;
         this.blocky=y;
         this.gameBoard=gameBoard;
+        this.act=act;
+        this.blocks=blocks;
     }
 
     public void move(String dir) {
         velocity = 0;
-        time.schedule(new GameLoopTask(dir, this, gameBoard, blockx,blocky, SCALE), 25, 25);
+        time.schedule(new GameLoopTask(dir, this, gameBoard, blockx,blocky, SCALE,act, blocks), 25, 25);
     }
+
 
 
     public float getVelocity() {
