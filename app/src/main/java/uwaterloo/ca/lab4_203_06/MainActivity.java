@@ -114,7 +114,9 @@ public class MainActivity extends AppCompatActivity {
     private void assign() {
         for (int i = 0; i < 4; i++) {
             for(int j=0;j<4;j++){
-                positions[i][j] = new Position((blocks.elementAt(0).getWidth() * SCALE * j),(blocks.elementAt(0).getHeight()*SCALE*i), false);
+                positions[i][j] = new Position(255*j ,255*i, false);
+                //makeLabel(rl,R.drawable.red,-490+(255*j),-1325+(255*i));
+                Log.d("Position","Width: "+gameBoard.getMeasuredWidth());
                 Log.d("Position","X: "+positions[i][j].getX()+ "Y: "+positions[i][j].getY());
             }
         }
