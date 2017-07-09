@@ -10,16 +10,14 @@ import java.util.Vector;
 
 public class GameLoopTask extends TimerTask {
     String direction;
-    Random rnd = new Random();
     GameBlock gb;
     float BLOCKX,BLOCKY, SCALE;
     ImageView gameBoard;
-    Position[][] positions = new Position[4][4];
     Activity thisActivity;
     GameLoopTask thisTask=this;
-    Vector<GameBlock> blocks;
+    Position[][] positions;
     public final float ORIGIN_X = -38, ORIGIN_Y = 117;
-    public GameLoopTask(String dir, GameBlock gb, ImageView gameBoard, float blockx, float blocky, float SCALE, Activity act, Vector<GameBlock> blocks){
+    public GameLoopTask(String dir, GameBlock gb, ImageView gameBoard, float blockx, float blocky, float SCALE, Activity act, Position[][] positions){
         direction=dir;
         this.gb=gb;
         BLOCKX=blockx;
@@ -29,18 +27,11 @@ public class GameLoopTask extends TimerTask {
         BLOCKY = gb.getY();
         this.SCALE = SCALE;
         thisActivity= act;
-        this.blocks=blocks;
+        this.positions=positions;
         Log.d("GAMEBOARD", String.format("BLOCK.XY, %f, %f", BLOCKX, BLOCKY));
-        assign();
+        //assign();
     }
-    public void assign() {
-        for (int i = 0; i < 4; i++) {
-            for(int j=0;j<4;j++){
-                positions[i][j] = new Position(ORIGIN_X+4 + (gb.getWidth() * SCALE * j), ORIGIN_Y-4 +(gb.getHeight()*SCALE*i), false);
-                Log.d("Position","X: "+positions[i][j].getX()+ "Y: "+positions[i][j].getY());
-            }
-        }
-    }
+
     public Position getPosition(float x, float y){
         int e=4;
         for(int i=0;i<4;i++) {
@@ -67,9 +58,6 @@ public class GameLoopTask extends TimerTask {
                         if (gb.getX() + gb.getVelocity() >= ORIGIN_X + (gb.getWidth() * SCALE * 3f)) {
                             gb.setX(ORIGIN_X + (gb.getWidth() * SCALE * 3f));
                             getPosition(gb.getX(), gb.getY()).setOccupied(true);
-                            Position rndPos = getRandPos();
-                            Log.d("RandPos", "X: "+rndPos.getX()+" Y: "+rndPos.getY());
-                            createBlock(rndPos.getX(), rndPos.getY());
                             thisTask.cancel();
                         } else {
                             gb.setX(gb.getX() + gb.getVelocity());
@@ -80,8 +68,6 @@ public class GameLoopTask extends TimerTask {
                         if (gb.getX() + gb.getVelocity() <= ORIGIN_X) {
                             gb.setX(ORIGIN_X);
                             getPosition(gb.getX(), gb.getY()).setOccupied(true);
-                            Position rndPos = getRandPos();
-                            createBlock(rndPos.getX(), rndPos.getY());
                             thisTask.cancel();
                         } else {
                             gb.setX(gb.getX() + gb.getVelocity());
@@ -92,8 +78,6 @@ public class GameLoopTask extends TimerTask {
                         if (gb.getY() + gb.getVelocity() <= ORIGIN_Y) {
                             gb.setY(ORIGIN_Y);
                             getPosition(gb.getX(), gb.getY()).setOccupied(true);
-                            Position rndPos = getRandPos();
-                            createBlock(rndPos.getX(), rndPos.getY());
                             thisTask.cancel();
                         } else {
                             gb.setY(gb.getY() + gb.getVelocity());
@@ -104,8 +88,6 @@ public class GameLoopTask extends TimerTask {
                         if (gb.getY() + gb.getVelocity() >= ORIGIN_Y + (gb.getHeight() * SCALE * 3f)) {
                             gb.setY(ORIGIN_Y + (gb.getHeight() * SCALE * 3f));
                             getPosition(gb.getX(), gb.getY()).setOccupied(true);
-                            Position rndPos = getRandPos();
-                            createBlock(rndPos.getX(), rndPos.getY());
                             thisTask.cancel();
                         } else {
                             gb.setY(gb.getY() + gb.getVelocity());
@@ -118,46 +100,4 @@ public class GameLoopTask extends TimerTask {
 
     }
 
-
-    public Position getRandPos(){
-        Position tmpPos=positions[rnd.nextInt(4)][rnd.nextInt(4)];
-        if (tmpPos.isOccupied()){
-            return getRandPos();
-        }else {
-            return tmpPos;
-        }
-    }
-    private void createBlock(float x, float y) {
-       blocks.add(new GameBlock(gb.getRl(),gb.getSrcImg(),x ,y ,gb.getCtx(),gb.getTime(),gameBoard,thisActivity,blocks));
-    }
-
-
-
-    class Position {
-        float xPos;
-        float yPos;
-        boolean occupied;
-        public Position(float x, float y, boolean occupied){
-            xPos=x;
-            yPos=y;
-            this.occupied=occupied;
-        }
-
-        public float getX() {
-            return xPos;
-        }
-
-        public float getY() {
-            return yPos;
-        }
-
-        public boolean isOccupied() {
-            return occupied;
-        }
-
-        public void setOccupied(boolean occupied) {
-            this.occupied = occupied;
-        }
-
-    }
 }

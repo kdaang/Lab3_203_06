@@ -1,14 +1,18 @@
 package uwaterloo.ca.lab4_203_06;
+import android.app.Activity;
 import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import java.util.Random;
 import java.util.Timer;
 import java.util.Vector;
 
@@ -22,8 +26,14 @@ public class MainActivity extends AppCompatActivity {
     Vector<float[]> accelData = new Vector<>();
     Vector<GameBlock>  blocks = new Vector<>();
     public final float BOARDX = 0, BOARDY = -200, BLOCKX = 0, BLOCKY = 0;
+    public final float ORIGIN_X = -38, ORIGIN_Y = 117;
+    public final float SCALE = .65f;
     ImageView gameBoard;
     Timer time = new Timer();
+    RelativeLayout rl;
+    Activity activity = this;
+    Position[][] positions = new Position[4][4];
+    Random rnd = new Random();
 
 
 
@@ -33,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_lab3_203_06);
 
         //Declares and initializes the linear layout used in the application
-        RelativeLayout rl = (RelativeLayout) findViewById(R.id.activity_lab3_203_06);
+        rl = (RelativeLayout) findViewById(R.id.activity_lab3_203_06);
 
         //Initializes a blank label to display the direction of the gesture
         TextView dirLbl = makeLabel(rl, "Left", 700, 1200);
@@ -51,31 +61,44 @@ public class MainActivity extends AppCompatActivity {
         //Creates a label that indicates the current accelerometer reading
         gameBoard = makeLabel(rl, R.drawable.gameboard, BOARDX, BOARDY);
         final GameBlock gameBlock = new GameBlock(rl, R.drawable.gameblock, BLOCKX, BLOCKY,
-                getApplicationContext(), time, gameBoard, this, blocks);
+                getApplicationContext(), time, gameBoard, this, positions);
         blocks.add(gameBlock);
+        assign();
 
         l.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Position tmpPos =getRandPos();
                 moveAll("LEFT");
+                blocks.add(new GameBlock(rl, R.drawable.gameblock, tmpPos.getX(), tmpPos.getY(),
+                        getApplicationContext(), time, gameBoard, activity, positions));
             }
         });
         r.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Position tmpPos =getRandPos();
                 moveAll("RIGHT");
+                blocks.add(new GameBlock(rl, R.drawable.gameblock, tmpPos.getX(), tmpPos.getY(),
+                        getApplicationContext(), time, gameBoard, activity, positions));
             }
         });
         u.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Position tmpPos =getRandPos();
                 moveAll("UP");
+                blocks.add(new GameBlock(rl, R.drawable.gameblock, tmpPos.getX(), tmpPos.getY(),
+                        getApplicationContext(), time, gameBoard, activity, positions));
             }
         });
         d.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Position tmpPos =getRandPos();
                 moveAll("DOWN");
+                blocks.add(new GameBlock(rl, R.drawable.gameblock, tmpPos.getX(), tmpPos.getY(),
+                        getApplicationContext(), time, gameBoard, activity, positions));
             }
         });
 
@@ -87,6 +110,14 @@ public class MainActivity extends AppCompatActivity {
         accel = new MySensorEventListener(accelSensorLbl, accelData, dirLbl, gameBlock);
         sensorManager.registerListener(accel, accelSensor, SensorManager.SENSOR_DELAY_GAME);
 
+    }
+    private void assign() {
+        for (int i = 0; i < 4; i++) {
+            for(int j=0;j<4;j++){
+                positions[i][j] = new Position((blocks.elementAt(0).getWidth() * SCALE * j),(blocks.elementAt(0).getHeight()*SCALE*i), false);
+                Log.d("Position","X: "+positions[i][j].getX()+ "Y: "+positions[i][j].getY());
+            }
+        }
     }
 
 
@@ -114,6 +145,15 @@ public class MainActivity extends AppCompatActivity {
             e.move(dir);
         }
     }
+    public Position getRandPos(){
+        Position tmpPos=positions[rnd.nextInt(4)][rnd.nextInt(4)];
+        if (tmpPos.isOccupied()){
+            return getRandPos();
+        }else {
+            return tmpPos;
+        }
+    }
+
 
 
 

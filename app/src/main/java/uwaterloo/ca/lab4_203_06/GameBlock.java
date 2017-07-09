@@ -19,9 +19,9 @@ public class GameBlock extends AppCompatImageView {
     int srcImg;
     Context ctx;
     Activity act;
-    Vector<GameBlock> blocks;
+    Position[][] positions;
 
-    public GameBlock(RelativeLayout rl, int img, float x, float y, Context ctx, Timer time, ImageView gameBoard, Activity act, Vector<GameBlock> blocks) {
+    public GameBlock(RelativeLayout rl, int img, float x, float y, Context ctx, Timer time, ImageView gameBoard, Activity act, Position[][] positions) {
         super(ctx);
         setImageResource(img);
         setX(OFFSET_X+x);
@@ -37,12 +37,12 @@ public class GameBlock extends AppCompatImageView {
         this.blocky=y;
         this.gameBoard=gameBoard;
         this.act=act;
-        this.blocks=blocks;
+        this.positions=positions;
     }
 
     public void move(String dir) {
         velocity = 0;
-        time.schedule(new GameLoopTask(dir, this, gameBoard, blockx,blocky, SCALE,act, blocks), 25, 25);
+        time.schedule(new GameLoopTask(dir, this, gameBoard, blockx,blocky, SCALE,act, positions), 25, 25);
     }
 
 
