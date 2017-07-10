@@ -1,4 +1,4 @@
-package uwaterloo.ca.lab3_203_06;
+package uwaterloo.ca.lab4_203_06;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
