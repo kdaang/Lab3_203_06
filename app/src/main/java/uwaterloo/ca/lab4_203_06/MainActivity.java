@@ -1,9 +1,11 @@
 package uwaterloo.ca.lab4_203_06;
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -181,7 +183,12 @@ public class MainActivity extends AppCompatActivity {
                                                 getStop("DOWN");
                                                 if(!checkLegal()){
                                                     //YOU LOSE
-                                                    Toast.makeText(activity, "YOU LOSE!", Toast.LENGTH_LONG).show();
+                                                    AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(activity);
+                                                    dlgAlert.setMessage("You Lose");
+                                                    dlgAlert.setTitle("FEELSBADMAN");
+                                                    dlgAlert.setPositiveButton("OK", null);
+                                                    dlgAlert.setCancelable(true);
+                                                    dlgAlert.create().show();
                                                 }
                                             }
                                         }
@@ -236,7 +243,7 @@ public class MainActivity extends AppCompatActivity {
         rl.addView(iv);
         return iv;
     }
-    private void moveAll(String dir){
+    public void moveAll(String dir){
         getStop(dir);
         for (GameBlock e : blocks){
             if(dir=="RIGHT"){

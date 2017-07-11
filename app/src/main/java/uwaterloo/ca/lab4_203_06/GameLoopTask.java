@@ -36,18 +36,6 @@ public class GameLoopTask extends TimerTask {
         //assign();
     }
 
-    public Position getPosition(float x, float y){
-        int e=4;
-        for(int i=0;i<4;i++) {
-            for (int j = 0; j < 4; j++) {
-                if ((positions[i][j].getX() < x+e || positions[i][j].getX() >x-e)&& (positions[i][j].getY() < y+e || positions[i][j].getY()> y-e)) {
-                    return positions[i][j];
-                }
-            }
-        }
-        return null;
-    }
-
     @Override
     public void run(){
         thisActivity.runOnUiThread(new Runnable() {

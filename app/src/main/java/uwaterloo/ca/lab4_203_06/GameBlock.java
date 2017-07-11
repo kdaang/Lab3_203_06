@@ -3,6 +3,7 @@ package uwaterloo.ca.lab4_203_06;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.AppCompatImageView;
 import android.util.Log;
 import android.widget.ImageView;
@@ -67,6 +68,7 @@ public class GameBlock extends AppCompatImageView {
         time.schedule(new GameLoopTask(dir, this, gameBoard, blockx,blocky, SCALE,act, positions), 25, 25);
     }
 
+
     public float getVelocity() {
         return velocity;
     }
@@ -122,7 +124,12 @@ public class GameBlock extends AppCompatImageView {
         currBlocknum *= 2;
         currNum.setText("" + currBlocknum);
         if (currBlocknum==256){
-            Toast.makeText(act, "You Win!", Toast.LENGTH_LONG).show();
+            AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(act);
+            dlgAlert.setMessage("You Win");
+            dlgAlert.setTitle("FEELSGOODMAN");
+            dlgAlert.setPositiveButton("OK", null);
+            dlgAlert.setCancelable(true);
+            dlgAlert.create().show();
         }
     }
 
