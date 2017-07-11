@@ -18,6 +18,8 @@ public class GameLoopTask extends TimerTask {
     Position[][] positions;
 
     public final float ORIGIN_X = -38, ORIGIN_Y = 117;
+    public final float TEXT_OFFSET_X = 100;
+    public final float TEXT_OFFSET_Y = 100;
     public GameLoopTask(String dir, GameBlock gb, ImageView gameBoard, float blockx, float blocky, float SCALE, Activity act, Position[][] positions){
         direction=dir;
         this.gb=gb;
@@ -59,9 +61,10 @@ public class GameLoopTask extends TimerTask {
                         int right_stop = gb.getStop();
                         if (gb.getX() + gb.getVelocity() >= ORIGIN_X + (gb.getWidth() * SCALE * right_stop)) {
                             gb.setX(ORIGIN_X + (gb.getWidth() * SCALE * right_stop));
-                            positions[gb.getBlocknum_y()][gb.getBlocknum_x()].setOccupied(false);
+                            gb.getCurrNum().setX(gb.getX()+TEXT_OFFSET_X);
+//                            positions[gb.getBlocknum_y()][gb.getBlocknum_x()].setOccupied(false);
                             gb.setBlocknum_x(right_stop);
-                            positions[gb.getBlocknum_y()][right_stop].setOccupied(true);
+                            //positions[gb.getBlocknum_y()][right_stop].setOccupied(true);
                             //Log.d("STOP", "stop: " + stop + " OCCUPIED: " +  positions[stop][gb.getBlocknum_y()].isOccupied());
                             Log.d("FINAL POS", "gb.x: " + gb.getBlocknum_x() + " gb.y: " + gb.getBlocknum_y());
                             for (int i = 0; i < 4; i++) {
@@ -74,6 +77,7 @@ public class GameLoopTask extends TimerTask {
                             thisTask.cancel();
                         } else {
                             gb.setX(gb.getX() + gb.getVelocity());
+                            gb.getCurrNum().setX(gb.getX()+TEXT_OFFSET_X);
                             gb.setVelocity(gb.getVelocity() + 10);
                         }
                         break;
@@ -81,9 +85,10 @@ public class GameLoopTask extends TimerTask {
                         int left_stop = gb.getStop();
                         if (gb.getX() + gb.getVelocity() <= (ORIGIN_X + (gb.getWidth() * SCALE * left_stop))) {
                             gb.setX(ORIGIN_X + (gb.getWidth() * SCALE * left_stop));
-                            positions[gb.getBlocknum_y()][gb.getBlocknum_x()].setOccupied(false);
+                            gb.getCurrNum().setX(gb.getX()+TEXT_OFFSET_X);
+//                            positions[gb.getBlocknum_y()][gb.getBlocknum_x()].setOccupied(false);
                             gb.setBlocknum_x(left_stop);
-                            positions[gb.getBlocknum_y()][left_stop].setOccupied(true);
+//                            positions[gb.getBlocknum_y()][left_stop].setOccupied(true);
                             Log.d("FINAL POS", "gb.x: " + gb.getBlocknum_x() + " gb.y: " + gb.getBlocknum_y());
                             for (int i = 0; i < 4; i++) {
                                 for(int j=0;j<4;j++){
@@ -95,6 +100,7 @@ public class GameLoopTask extends TimerTask {
                             thisTask.cancel();
                         } else {
                             gb.setX(gb.getX() + gb.getVelocity());
+                            gb.getCurrNum().setX(gb.getX()+TEXT_OFFSET_X);
                             gb.setVelocity(gb.getVelocity() - 10);
                         }
                         break;
@@ -102,13 +108,15 @@ public class GameLoopTask extends TimerTask {
                         int top_stop = gb.getStop();
                         if (gb.getY() + gb.getVelocity() <= (ORIGIN_Y + (gb.getHeight() * SCALE * top_stop))) {
                             gb.setY(ORIGIN_Y + (gb.getWidth() * SCALE * top_stop));
-                            positions[gb.getBlocknum_y()][gb.getBlocknum_x()].setOccupied(false);
+                            gb.getCurrNum().setY(gb.getY()+TEXT_OFFSET_Y);
+//                            positions[gb.getBlocknum_y()][gb.getBlocknum_x()].setOccupied(false);
                             gb.setBlocknum_y(top_stop);
-                            positions[top_stop][gb.getBlocknum_x()].setOccupied(true);
+//                            positions[top_stop][gb.getBlocknum_x()].setOccupied(true);
                             gb.setisDoneMov(true);
                             thisTask.cancel();
                         } else {
                             gb.setY(gb.getY() + gb.getVelocity());
+                            gb.getCurrNum().setY(gb.getY()+TEXT_OFFSET_Y);
                             gb.setVelocity(gb.getVelocity() - 10);
                         }
                         break;
@@ -116,13 +124,15 @@ public class GameLoopTask extends TimerTask {
                         int bot_stop = gb.getStop();
                         if (gb.getY() + gb.getVelocity() >= (ORIGIN_Y + (gb.getHeight() * SCALE * bot_stop))) {
                             gb.setY(ORIGIN_Y + (gb.getHeight() * SCALE * bot_stop));
-                            positions[gb.getBlocknum_y()][gb.getBlocknum_x()].setOccupied(false);
+                            gb.getCurrNum().setY(gb.getY()+TEXT_OFFSET_Y);
+//                            positions[gb.getBlocknum_y()][gb.getBlocknum_x()].setOccupied(false);
                             gb.setBlocknum_y(bot_stop);
-                            positions[bot_stop][gb.getBlocknum_x()].setOccupied(true);
+//                            positions[bot_stop][gb.getBlocknum_x()].setOccupied(true);
                             gb.setisDoneMov(true);
                             thisTask.cancel();
                         } else {
                             gb.setY(gb.getY() + gb.getVelocity());
+                            gb.getCurrNum().setY(gb.getY()+TEXT_OFFSET_Y);
                             gb.setVelocity(gb.getVelocity() + 10);
                         }
                         break;

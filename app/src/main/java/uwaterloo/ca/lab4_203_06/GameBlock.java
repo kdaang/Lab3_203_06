@@ -2,10 +2,13 @@ package uwaterloo.ca.lab4_203_06;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v7.widget.AppCompatImageView;
 import android.util.Log;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.Timer;
 import java.util.Vector;
@@ -24,6 +27,7 @@ public class GameBlock extends AppCompatImageView {
     Position[][] positions;
     int currBlocknum;
     private boolean isDoneMoving;
+    TextView currNum;
     public GameBlock(RelativeLayout rl, int img, float x, float y, Context ctx, Timer time, ImageView gameBoard, Activity act,
                      Position[][] positions, int blocknum_x, int blocknum_y, int currBlocknum) {
         super(ctx);
@@ -45,6 +49,13 @@ public class GameBlock extends AppCompatImageView {
         this.blocknum_x = blocknum_x;
         this.blocknum_y = blocknum_y;
         this.currBlocknum = currBlocknum;
+        currNum = new TextView(ctx);
+        currNum.setTextColor(Color.RED);
+        currNum.setText(""+currBlocknum);
+        currNum.setX(getX()+100);
+        currNum.setY(getY()+100);
+        currNum.setTextSize(30);
+        rl.addView(currNum);
         isDoneMoving = true;
         Log.d("NEW SPAWN", "blocknum_x: " + blocknum_x + " blocknum_y: " + blocknum_y);
     }
@@ -100,6 +111,23 @@ public class GameBlock extends AppCompatImageView {
 
     public Timer getTime() {
         return time;
+    }
+    public TextView getCurrNum(){
+        return currNum;
+    }
+    public int getCurrBlockNum(){
+        return currBlocknum;
+    }
+    public void twice(){
+        currBlocknum *= 2;
+        currNum.setText("" + currBlocknum);
+        if (currBlocknum==256){
+            Toast.makeText(act, "You Win!", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    public void setSrcImg(int srcImg) {
+        this.srcImg = srcImg;
     }
 }
 

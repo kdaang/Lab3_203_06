@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.Random;
 import java.util.Timer;
@@ -35,6 +36,9 @@ public class MainActivity extends AppCompatActivity {
     final Activity activity = this;
     Position[][] positions = new Position[4][4];
     Random rnd = new Random();
+    int[][] moves = new int[4][4];
+    boolean legal;
+//    int[][] occMatrix = new int[4][4];
 
 
 
@@ -117,7 +121,74 @@ public class MainActivity extends AppCompatActivity {
                 activity.runOnUiThread(new Runnable(){
                     public void run(){
                         if(isDoneMov()){
-                            blocks.add(genRandGameBlock());
+
+//                            for(int row = 0; row < 4; row ++){
+//                                for(int col = 0; col < 4; col ++){
+//                                    occMatrix[row][col] = 0;
+//                                }
+//                            }
+//
+//                            for(GameBlock e : blocks){
+//                                occMatrix[e.getBlocknum_y()][e.getBlocknum_x()] ++;
+//                            }
+//
+//                            for(int row = 0; row < 4; row ++){
+//                                for(int col = 0; col < 4; col ++){
+//                                    if(!positions[row][col].isOccupied()){
+//
+//                                    }
+//                                }
+//                            }
+
+
+
+                            for(int row = 0; row < 4; row ++){
+                                for(int col = 0; col < 4; col ++){
+                                    positions[row][col].setOccupied(false);
+                                    positions[row][col].setBlock(null);
+                                }
+                            }
+                            Vector<GameBlock> rem = new Vector<GameBlock>();
+                            for(GameBlock e : blocks){
+                                if(positions[e.getBlocknum_y()][e.getBlocknum_x()].isOccupied()){
+                                    positions[e.getBlocknum_y()][e.getBlocknum_x()].getBlock().twice();
+                                    positions[e.getBlocknum_y()][e.getBlocknum_x()].setNum(2*e.getCurrBlockNum());
+                                    //Log.d("MERGE", e.getBlocknum_y() + "" + e.getBlocknum_x() + "" + e.getCurrBlockNum());
+                                    e.setVisibility(View.INVISIBLE);
+                                    e.getCurrNum().setVisibility(View.INVISIBLE);
+                                    rem.add(e);
+                                }else{
+                                    positions[e.getBlocknum_y()][e.getBlocknum_x()].setBlock(e);
+                                    positions[e.getBlocknum_y()][e.getBlocknum_x()].setOccupied(true);
+                                }
+                            }
+                            for(GameBlock e : rem){
+                                blocks.remove(e);
+                            }
+
+
+
+
+                            if(legal) {
+                                blocks.add(genRandGameBlock());
+                                if(blocks.size() == 16){
+                                    getStop("LEFT");
+                                    if(!checkLegal()){
+                                        getStop("RIGHT");
+                                        if(!checkLegal()){
+                                            getStop("UP");
+                                            if(!checkLegal()){
+                                                getStop("DOWN");
+                                                if(!checkLegal()){
+                                                    //YOU LOSE
+                                                    Toast.makeText(activity, "YOU LOSE!", Toast.LENGTH_LONG).show();
+                                                }
+                                            }
+                                        }
+                                    }
+
+                                }
+                            }
                             cancel();
                         }
                     }
@@ -136,7 +207,8 @@ public class MainActivity extends AppCompatActivity {
     private void assign() {
         for (int i = 0; i < 4; i++) {
             for(int j=0;j<4;j++){
-                positions[i][j] = new Position(255*j ,255*i, j, i, false);
+                positions[i][j] = new Position(255*j ,255*i, j, i, false,-1);
+
                 //makeLabel(rl,R.drawable.red,-490+(255*j),-1325+(255*i));
                 //Log.d("Position","Width: "+gameBoard.getMeasuredWidth());
                 //Log.d("Position","X: "+positions[i][j].getX()+ "Y: "+positions[i][j].getY());
@@ -165,6 +237,144 @@ public class MainActivity extends AppCompatActivity {
         return iv;
     }
     private void moveAll(String dir){
+        getStop(dir);
+        for (GameBlock e : blocks){
+            if(dir=="RIGHT"){
+                e.setStop(moves[e.getBlocknum_y()][e.getBlocknum_x()]+e.getBlocknum_x());
+            }
+            else if (dir == "LEFT"){
+                e.setStop(-moves[e.getBlocknum_y()][e.getBlocknum_x()]+e.getBlocknum_x());
+            }
+            else if (dir == "UP"){
+                e.setStop(-moves[e.getBlocknum_y()][e.getBlocknum_x()]+e.getBlocknum_y());
+            }
+            else if (dir == "DOWN"){
+                e.setStop(moves[e.getBlocknum_y()][e.getBlocknum_x()]+e.getBlocknum_y());
+            }
+
+            //e.move(dir);
+        }
+        for (GameBlock e : blocks){
+            e.move(dir);
+        }
+    }
+//    public void moveStuff(){
+//        for(GameBlock e : blocks){
+//            //detail
+//        }
+//    }
+
+    public void getStop(String dir){
+        switch (dir){
+            case "RIGHT":
+                for(int x = 0; x < 4; x++){
+                    int counter=0, last=0;
+                    for(int y = 3; y >= 0; y--){
+                        if(positions[x][y].isOccupied()){
+                            if(positions[x][y].getNum()==last){
+                                counter++;
+                                last=0;
+                            }
+                            else{
+                                last=positions[x][y].getNum();
+                            }
+                            moves[x][y]=counter;
+
+                        }
+                        else {
+                            counter++;
+                        }
+                    }
+                }
+                break;
+            case "LEFT":
+                for(int x = 0; x < 4; x++){
+                    int counter=0, last=0;
+                    for(int y = 0; y < 4; y++){
+                        if(positions[x][y].isOccupied()){
+                            if(positions[x][y].getNum()==last){
+                                counter++;
+                                last=0;
+                            }
+                            else{
+                                last=positions[x][y].getNum();
+                            }
+                            moves[x][y]=counter;
+                        }
+                        else {
+                            counter++;
+                        }
+                    }
+                }
+                break;
+            case "UP":
+                for(int col = 0; col < 4; col++){
+                    int counter=0, last=0;
+                    for(int row = 0; row < 4;row++){
+                        if(positions[row][col].isOccupied()){
+                            if(positions[row][col].getNum()==last){
+                                counter++;
+                                last=0;
+                            }
+                            else {
+                                last = positions[row][col].getNum();
+                            }
+
+                            moves[row][col]=counter;
+
+                            Log.d("SURPRISE", "row: " + row + "\tcol:" + col + "\tcount: " + counter);
+                            Log.d("FUKK SURPRISE", "" + moves[0][0]);
+                        }
+                        else {
+                            counter++;
+                        }
+                        Log.d("Stuff", "row: " + row + "\tcol:" + col + "\tcount: " + counter + "\tlast: " + last);
+                    }
+                }
+                break;
+            case "DOWN":
+                for(int y = 0; y < 4; y++){
+                    int counter=0, last=0;
+                    for(int x = 3; x >= 0 ;x--){
+                        if(positions[x][y].isOccupied()){
+                            if(positions[x][y].getNum()==last){
+                                counter++;
+                                last=0;
+                            }
+                            else{
+                                last=positions[x][y].getNum();
+                            }
+                            moves[x][y]=counter;
+                        }
+                        else {
+                            counter++;
+                        }
+                    }
+                }
+                break;
+            default:
+                break;
+        }
+
+        Log.d("FUKK SURPRISE", "" + moves[0][0]);
+        for(int i = 0; i < 4; i ++){
+            for(int j = 0; j < 4; j ++){
+                Log.d("CheckMoves",""+ moves[i][j]);
+            }
+        }
+
+        legal = checkLegal();
+    }
+
+    public boolean checkLegal(){
+        for(GameBlock e : blocks){
+            if(moves[e.getBlocknum_y()][e.getBlocknum_x()] != 0) {
+                return true;
+            }
+        }
+        return false;
+    }
+    /*private void moveAll(String dir){
         for (GameBlock e : blocks){
             e.setStop(getStop(dir, e));
             e.move(dir);
@@ -214,7 +424,7 @@ public class MainActivity extends AppCompatActivity {
             default:
                 return 0;
         }
-    }
+    }*/
     /*private void moveAllLeft(){
         for(int y = 0; y < 4; y++){
             for(int x = 0 ; x <4; x++){
@@ -244,16 +454,16 @@ public class MainActivity extends AppCompatActivity {
         }
     }*/
     public GameBlock genRandGameBlock(){
-        Position tmpPos =getRandPos();
-        int tempcurrblocknum = rnd.nextInt(2);
-        if(tempcurrblocknum == 0){
-            tempcurrblocknum = 2;
-        }
-        else{
-            tempcurrblocknum = 4;
-        }
+
+        Position tmpPos = getRandPos();
+
+        int tmp = 2 * rnd.nextInt(2) + 2;
+
+        tmpPos.setNum(tmp);
         return new GameBlock(rl, R.drawable.gameblock, tmpPos.getX(), tmpPos.getY(),
-                getApplicationContext(), time, gameBoard, activity, positions, tmpPos.getBlocknum_x(), tmpPos.getBlocknum_y(), tempcurrblocknum);
+                getApplicationContext(), time, gameBoard, activity, positions,
+                tmpPos.getBlocknum_x(), tmpPos.getBlocknum_y(), tmp);
+
     }
     public Position getRandPos(){
         int randx = rnd.nextInt(4);
